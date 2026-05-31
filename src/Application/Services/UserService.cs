@@ -19,12 +19,8 @@ public class UserService(
         return ToDTO(user);
     }
 
-    public async Task<ResponseUserDTO> GetUser(int id)
-    {
-        var user = await GetUserOrThrow(id);
-
-        return ToDTO(user);
-    }
+    public async Task<ResponseUserDTO> GetUser(int id) 
+        => ToDTO(await GetUserOrThrow(id));
 
     public async Task<IEnumerable<ResponseUserDTO>> GetAllUser()
     {
