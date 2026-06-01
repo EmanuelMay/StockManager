@@ -11,7 +11,7 @@ public class UserService(
 {
     public async Task<ResponseUserDTO> Create(CreateUserDTO userDTO)
     {
-        if(repository.EmailExists(userDTO.Email))
+        if(await repository.EmailExists(userDTO.Email))
             throw new EmailAlreadyExistsException("email already exists");
 
         var user = new User(userDTO.Name, userDTO.Email, BCrypt.Net.BCrypt.HashPassword(userDTO.Password));
@@ -44,7 +44,7 @@ public class UserService(
     {
         var user = await GetUserOrThrow(id);
 
-        if (repository.EmailExists(userDTO.Email))
+        if (await repository.EmailExists(userDTO.Email))
             throw new EmailAlreadyExistsException("email already exists");
 
         user.Update(userDTO.Name, userDTO.Email);

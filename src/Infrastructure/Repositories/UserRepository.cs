@@ -24,6 +24,6 @@ public class UserRepository(
     public void Delete(User user)
         => repository.Users.Remove(user);
 
-    public bool EmailExists(string? email)
-        => repository.Users.Any(u => u.Email == email);
+    public async Task<bool> EmailExists(string? email)
+        => await repository.Users.AnyAsync(u => u.Email == email);
 }

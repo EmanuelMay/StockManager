@@ -14,5 +14,5 @@ public interface ICategoryRepository
 
     public void Delete(Category category);
 
-    public bool CategoryExists(string? name);
+    public Task<bool> CategoryExists(string? name);
 }

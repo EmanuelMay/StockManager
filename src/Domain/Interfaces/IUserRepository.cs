@@ -14,5 +14,5 @@ public interface IUserRepository
 
     public void Delete(User user);
 
-    public bool EmailExists(string? email);
+    public Task<bool> EmailExists(string? email);
 }

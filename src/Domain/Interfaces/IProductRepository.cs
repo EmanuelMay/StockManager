@@ -14,5 +14,5 @@ public interface IProductRepository
 
     public void Delete(Product product);
 
-    public bool ProductExists(string? name);
+    public Task<bool> ProductExists(string? name);
 }
