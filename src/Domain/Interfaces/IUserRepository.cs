@@ -10,7 +10,7 @@ public interface IUserRepository
 
     public Task<User?> GetUser(int id);
 
-    public Task<IEnumerable<User>> GetAllUser();
+    public Task<IEnumerable<User>> GetAllUsers();
 
     public void Delete(User user);
 

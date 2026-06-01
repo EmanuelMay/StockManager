@@ -18,7 +18,7 @@ public class UserRepository(
     public async Task<User?> GetUser(int id)
         => await repository.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task<IEnumerable<User>> GetAllUser()
+    public async Task<IEnumerable<User>> GetAllUsers()
         => await repository.Users.AsNoTracking().ToListAsync();
 
     public void Delete(User user)
