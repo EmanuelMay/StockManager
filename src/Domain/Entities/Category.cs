@@ -15,11 +15,19 @@ public class Category
     public string Name { get; private set; } = null!;
     public List<Product> Products { get; private set; } = [];
 
-    public void Update(string name)
+    public void Update(string? name)
     {
-        Validation(name);
+        UpdateValidation(name);
 
-        Name = name;
+        if (!string.IsNullOrWhiteSpace(name))
+            Name = name;
+    }
+
+    private static void UpdateValidation(string? name)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+            if (name.Length > 150)
+                throw new ArgumentException("name max length is 150");
     }
 
     private static void Validation(string name)

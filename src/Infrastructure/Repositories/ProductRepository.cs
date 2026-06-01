@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using StockManager.Domain.Entities;
+using StockManager.Domain.Interfaces;
 using StockManager.Infrastructure.Context;
 
-namespace StockManager.Domain.Interfaces;
+namespace StockManager.Infrastructure.Repositories;
 
 public class ProductRepository(
     AppDbContext repository

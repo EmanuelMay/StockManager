@@ -23,7 +23,7 @@ public class Product
 
     public void Update(string? name, int? quantity, decimal? price, int? categoryId)
     {
-        Validation(name, quantity, price);
+        UpdateValidation(name, quantity, price);
 
         if (!string.IsNullOrWhiteSpace(name))
             Name = name;
@@ -52,6 +52,17 @@ public class Product
         if (quantity < 0)
             throw new ArgumentException("quantity cannot be negative");
         if (price < 0)
-            throw new ArgumentException("prica annot be negative");
+            throw new ArgumentException("price annot be negative");
+    }
+
+    private static void UpdateValidation(string? name, int? quantity, decimal? price)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+            if (name.Length > 150)
+                throw new ArgumentException("name max length is 150");
+        if (quantity < 0)
+            throw new ArgumentException("quantity cannot be negative");
+        if (price < 0)
+            throw new ArgumentException("price annot be negative");
     }
 }

@@ -10,7 +10,7 @@ using StockManager.Infrastructure.Context;
 namespace StockManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260531184246_Initial")]
+    [Migration("20260601021834_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

@@ -20,7 +20,7 @@ public class User
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
 
-    public void Update(string name, string email)
+    public void Update(string? name, string? email)
     {
         UpdateValidation(name, email);
 
@@ -30,16 +30,19 @@ public class User
             Email = email;
     }
 
-    private void UpdateValidation(string name, string email)
+    private void UpdateValidation(string? name, string? email)
     {
-        if (name.Length > 150)
-            throw new ArgumentException("name max length is 150");
-        if (email.Length > 255)
-            throw new ArgumentException("email max length is 255");
+        if (!string.IsNullOrWhiteSpace(name))
+            if (name.Length > 150)
+                throw new ArgumentException("name max length is 150");
         
         if (!string.IsNullOrWhiteSpace(email))
+        {
             if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 throw new ArgumentException("invalid email");
+            if (email.Length > 255)
+                throw new ArgumentException("email max length is 255");
+        }
     }
 
     private void Validation(string name, string email)
