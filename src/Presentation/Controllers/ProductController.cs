@@ -12,7 +12,7 @@ public class Product(
 {
     [HttpPost]
     public async Task<ActionResult<ResponseProductDTO>> Create([FromBody] CreateProductDTO productDTO) 
-        => Ok(await service.Create(productDTO));
+        => Created("products/", await service.Create(productDTO));
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ResponseProductDTO>> GetProduct(int id)
