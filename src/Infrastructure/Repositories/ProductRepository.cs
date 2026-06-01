@@ -23,4 +23,7 @@ public class ProductRepository(
 
     public void Delete(Product product) 
         => repository.Products.Remove(product);
+    
+    public bool ProductExists(string? name)
+        => repository.Products.Any(p => p.Name == name);
 }

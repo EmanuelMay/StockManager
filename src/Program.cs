@@ -3,6 +3,7 @@ using StockManager.Application.Services;
 using StockManager.Domain.Interfaces;
 using StockManager.Infrastructure.Context;
 using StockManager.Infrastructure.Repositories;
+using StockManager.Presentation.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ConfigureExceptionHandler(app.Environment);  
 }
 
 app.UseHttpsRedirection();

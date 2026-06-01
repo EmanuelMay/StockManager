@@ -23,4 +23,7 @@ public class CategoryRepository(
     
     public void Delete(Category category)
         => repository.Categories.Remove(category);
+    
+    public bool CategoryExists(string? name)
+        => repository.Categories.Any(c => c.Name == name);
 }

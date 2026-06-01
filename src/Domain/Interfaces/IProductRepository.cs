@@ -13,4 +13,6 @@ public interface IProductRepository
     public Task<IEnumerable<Product>> GetAllProducts();
 
     public void Delete(Product product);
+
+    public bool ProductExists(string? name);
 }

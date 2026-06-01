@@ -6,7 +6,7 @@ namespace StockManager.Presentation.Controllers;
 
 [ApiController]
 [Route("products/")]
-public class Product(
+public class ProductController(
     ProductService service
 ) : ControllerBase
 {

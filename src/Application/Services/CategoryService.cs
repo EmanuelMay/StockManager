@@ -11,6 +11,9 @@ public class CategoryService(
 {
     public async Task<ResponseCategoryDTO> Create(CreateCategoryDTO categoryDTO)
     {
+        if (repository.CategoryExists(categoryDTO.Name))
+            throw new CategoryAlreadyExistsException("category already exists");
+
         var category = new Category(categoryDTO.Name);
 
         await repository.Create(category);
@@ -40,6 +43,9 @@ public class CategoryService(
     public async Task<ResponseCategoryDTO> Update(int id, UpdateCategoryDTO categoryDTO)
     {
         var category = await GetCategoryOrThrow(id);
+
+        if (repository.CategoryExists(categoryDTO.Name))
+            throw new CategoryAlreadyExistsException("category already exists");
 
         category.Update(categoryDTO.Name);
         await repository.SaveChanges();

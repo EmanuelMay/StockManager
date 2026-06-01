@@ -11,6 +11,9 @@ public class ProductService(
 {
     public async Task<ResponseProductDTO> Create(CreateProductDTO productDTO)
     {
+        if (repository.ProductExists(productDTO.Name)) 
+            throw new ProductAlreadyExistsException("product already exists");
+
         var product = new Product(productDTO.Name, productDTO.Quantity, productDTO.Price, productDTO.CategoryId);
 
         await repository.Create(product);
@@ -33,6 +36,9 @@ public class ProductService(
     {
         var product = await GetProductOrThrow(id);
 
+        if (repository.ProductExists(productDTO.Name))
+            throw new ProductAlreadyExistsException("product already exists");
+            
         product.Update(productDTO.Name, productDTO.Quantity, productDTO.Price, productDTO.CategoryId);
         await repository.SaveChanges();
 

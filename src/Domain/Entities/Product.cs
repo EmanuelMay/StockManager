@@ -63,6 +63,6 @@ public class Product
         if (quantity < 0)
             throw new ArgumentException("quantity cannot be negative");
         if (price < 0)
-            throw new ArgumentException("price annot be negative");
+            throw new ArgumentException("price cannot be negative");
     }
 }

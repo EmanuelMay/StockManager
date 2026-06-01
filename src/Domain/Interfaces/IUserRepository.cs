@@ -13,4 +13,6 @@ public interface IUserRepository
     public Task<IEnumerable<User>> GetAllUser();
 
     public void Delete(User user);
+
+    public bool EmailExists(string? email);
 }

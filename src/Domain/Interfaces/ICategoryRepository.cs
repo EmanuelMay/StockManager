@@ -13,4 +13,6 @@ public interface ICategoryRepository
     public Task<IEnumerable<Category>> GetAllCategories();
 
     public void Delete(Category category);
+
+    public bool CategoryExists(string? name);
 }
