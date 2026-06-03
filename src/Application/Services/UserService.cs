@@ -27,7 +27,7 @@ public class UserService(
 
     public async Task<IEnumerable<ResponseUserDTO>> GetAllUser()
     {
-        var users = await repository.GetAllUser();
+        var users = await repository.GetAllUsers();
 
         return users.Select(u => ToDTO(u));
     }
