@@ -15,4 +15,10 @@ public interface IUserRepository
     public void Delete(User user);
 
     public Task<bool> EmailExists(string? email);
+
+    public Task<User?> GetUserByEmail(string email);
+
+    public Task CreateResetPassword(UserResetPassword resetDTO);
+
+    public Task<UserResetPassword?> GetResetPasswordCode(string code, int id);
 }

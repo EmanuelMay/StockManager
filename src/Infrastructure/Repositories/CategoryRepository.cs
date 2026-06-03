@@ -6,24 +6,24 @@ using StockManager.Infrastructure.Context;
 namespace StockManager.Infrastructure.Repositories;
 
 public class CategoryRepository(
-    AppDbContext repository
+    AppDbContext context
 ) : ICategoryRepository
 {
     public async Task SaveChanges()
-        => await repository.SaveChangesAsync();
+        => await context.SaveChangesAsync();
     
     public async Task Create(Category category)
-        => await repository.Categories.AddAsync(category);
+        => await context.Categories.AddAsync(category);
     
     public async Task<Category?> GetCategory(int id)
-        => await repository.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        => await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
     public async Task<IEnumerable<Category>> GetAllCategories()
-        => await repository.Categories.AsNoTracking().ToListAsync();
+        => await context.Categories.AsNoTracking().ToListAsync();
     
     public void Delete(Category category)
-        => repository.Categories.Remove(category);
+        => context.Categories.Remove(category);
     
     public async Task<bool> CategoryExists(string? name)
-        => await repository.Categories.AnyAsync(c => c.Name == name);
+        => await context.Categories.AnyAsync(c => c.Name == name);
 }

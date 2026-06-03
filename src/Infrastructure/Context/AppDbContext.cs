@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; private set; }
     public DbSet<Product> Products { get; private set; }
     public DbSet<Category> Categories { get; private set; }
+    public DbSet<UserResetPassword> UserResetPassword { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder mb)
     {
@@ -47,5 +48,8 @@ public class AppDbContext : DbContext
         mb.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+        
+        mb.Entity<UserResetPassword>()
+            .ToTable("user_reset_password");
     }
 }

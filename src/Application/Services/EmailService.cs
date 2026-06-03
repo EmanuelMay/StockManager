@@ -1,11 +1,12 @@
 using MailKit.Net.Smtp;
 using MimeKit;
+using StockManager.Domain.Interfaces;
 
 namespace StockManager.Application.Services;
 
 public class EmailService(
     IConfiguration configuration
-)
+) : IEmailService
 {
     public async Task ResetPasswordEmail(string code, string email, string name)
     {

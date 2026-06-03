@@ -6,24 +6,37 @@ using StockManager.Infrastructure.Context;
 namespace StockManager.Infrastructure.Repositories;
 
 public class UserRepository(
-    AppDbContext repository
+    AppDbContext context
 ) : IUserRepository
 {
     public async Task SaveChanges()
-        => await repository.SaveChangesAsync();
+        => await context.SaveChangesAsync();
 
     public async Task Create(User user)
-        => await repository.Users.AddAsync(user);
+        => await context.Users.AddAsync(user);
 
     public async Task<User?> GetUser(int id)
-        => await repository.Users.FirstOrDefaultAsync(x => x.Id == id);
+        => await context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
     public async Task<IEnumerable<User>> GetAllUsers()
-        => await repository.Users.AsNoTracking().ToListAsync();
+        => await context.Users.AsNoTracking().ToListAsync();
 
     public void Delete(User user)
-        => repository.Users.Remove(user);
+        => context.Users.Remove(user);
 
     public async Task<bool> EmailExists(string? email)
-        => await repository.Users.AnyAsync(u => u.Email == email);
+        => await context.Users.AnyAsync(u => u.Email == email);
+    
+    public async Task<User?> GetUserByEmail(string email)
+        => await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    
+    public async Task CreateResetPassword(UserResetPassword resetDTO)
+        => await context.UserResetPassword.AddAsync(resetDTO);
+
+    public async Task<UserResetPassword?> GetResetPasswordCode(string code, int id)
+        => await context.UserResetPassword.FirstOrDefaultAsync(u => 
+            u.Code == code &&
+            u.UserId == id &&
+            u.ExpiresAt > DateTime.UtcNow &&
+            u.IsUsed == false);
 }

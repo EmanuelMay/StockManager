@@ -32,4 +32,18 @@ public class UserController(
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ResponseUserDTO>> Update(int id, [FromBody] UpdateUserDTO userDTO)
         => Ok(await service.Update(id, userDTO));
+    
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordUserDTO forgotDTO)
+    {
+        await service.ForgotPassword(forgotDTO.Email);
+        return Ok();
+    }
+
+    [HttpPatch("reset-password")]
+    public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordUserDTO resetDTO)
+    {
+        await service.ResetPassword(resetDTO.Email, resetDTO.Code, resetDTO.Password);
+        return Ok();
+    }
 }
