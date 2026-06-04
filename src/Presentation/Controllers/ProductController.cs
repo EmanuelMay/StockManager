@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Application.DTO;
 using StockManager.Application.Services;
@@ -6,6 +7,7 @@ namespace StockManager.Presentation.Controllers;
 
 [ApiController]
 [Route("products/")]
+[Authorize]
 public class ProductController(
     ProductService service
 ) : ControllerBase

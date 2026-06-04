@@ -75,9 +75,6 @@ public class UserService(
         var resetPassword = await repository.GetResetPasswordCode(code, user.Id)
             ?? throw new Exception("invalid code");
         
-        if (resetPassword.IsUsed)
-            throw new Exception("code already used");
-        
         user.UpdatePassword(BCrypt.Net.BCrypt.HashPassword(password));
         resetPassword.Used();
 

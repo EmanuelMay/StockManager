@@ -31,5 +31,5 @@ public class CategoryController(
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ResponseCategoryDTO>> Update(int id, [FromBody] UpdateCategoryDTO categoryDTO)
-        => await service.Update(id, categoryDTO);
+        => Ok(await service.Update(id, categoryDTO));
 }
