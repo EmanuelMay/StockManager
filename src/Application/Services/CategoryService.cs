@@ -1,42 +1,43 @@
 using StockManager.Application.DTO;
 using StockManager.Domain.Entities;
 using StockManager.Domain.Exceptions;
-using StockManager.Domain.Interfaces;
+using StockManager.Domain.Interfaces.Repositories;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Application.Services;
 
 public class CategoryService(
     ICategoryRepository repository
-)
+) : ICategoryService
 {
-    public async Task<ResponseCategoryDTO> Create(CreateCategoryDTO categoryDTO)
+    public async Task<ResponseCategoryDTO> Add(CreateCategoryDTO categoryDTO)
     {
-        if (await repository.CategoryExists(categoryDTO.Name))
+        if (await repository.Exists(categoryDTO.Name))
             throw new CategoryAlreadyExistsException("category already exists");
 
         var category = new Category(categoryDTO.Name);
 
-        await repository.Create(category);
+        await repository.Add(category);
         await repository.SaveChanges();
 
         return ToDTO(category);
     }
 
-    public async Task<ResponseCategoryDTO> GetCategory(int id)
+    public async Task<ResponseCategoryDTO> GetById(int id)
         => ToDTO(await GetCategoryOrThrow(id));
     
-    public async Task<IEnumerable<ResponseCategoryDTO>> GetAllCategory()
+    public async Task<IEnumerable<ResponseCategoryDTO>> GetAll()
     {
-        var categories = await repository.GetAllCategories();
+        var categories = await repository.GetAll();
 
         return categories.Select(c => ToDTO(c));
     }
 
-    public async Task Delete(int id)
+    public async Task Remove(int id)
     {
         var category = await GetCategoryOrThrow(id);
 
-        repository.Delete(category);
+        repository.Remove(category);
         await repository.SaveChanges();
     }
 
@@ -44,7 +45,7 @@ public class CategoryService(
     {
         var category = await GetCategoryOrThrow(id);
 
-        if (await repository.CategoryExists(categoryDTO.Name))
+        if (await repository.Exists(categoryDTO.Name))
             throw new CategoryAlreadyExistsException("category already exists");
 
         category.Update(categoryDTO.Name);
@@ -55,7 +56,7 @@ public class CategoryService(
 
     private async Task<Category> GetCategoryOrThrow(int id)
     {
-        var category = await repository.GetCategory(id)
+        var category = await repository.GetById(id)
             ?? throw new CategoryNotFoundException("category not found");
         return category;
     }

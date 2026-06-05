@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StockManager.Application.Services;
-using StockManager.Domain.Interfaces;
+using StockManager.Domain.Exceptions;
+using StockManager.Domain.Interfaces.Repositories;
+using StockManager.Domain.Interfaces.Services;
 using StockManager.Infrastructure.Context;
 using StockManager.Infrastructure.Repositories;
 using StockManager.Presentation.Middlewares;
@@ -13,15 +15,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddTransient<TokenService>();
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -51,7 +55,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var privateKey = builder.Configuration["JWT:PrivateKey"]
-    ?? throw new Exception("JWT:PrivateKey not configured");
+    ?? throw new JWTNotConfigured("JWT:PrivateKey not configured");
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

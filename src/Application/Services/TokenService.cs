@@ -3,12 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using StockManager.Domain.Entities;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Application.Services;
 
 public class TokenService(
     IConfiguration configuration
-)
+) : ITokenService
 {
     public string Generate(User user)
     {
@@ -35,7 +36,7 @@ public class TokenService(
         return handler.WriteToken(token);
     }
 
-    public static ClaimsIdentity GenerateClaims(User user)
+    private static ClaimsIdentity GenerateClaims(User user)
     {
         var ci = new ClaimsIdentity();
         ci.AddClaim(

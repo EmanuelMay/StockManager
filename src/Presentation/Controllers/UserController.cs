@@ -1,31 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Application.DTO;
-using StockManager.Application.Services;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Presentation.Controllers;
 
 [ApiController]
 [Route("users/")]
 public class UserController(
-    UserService service
+    IUserService service
 ): ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateUserDTO userDTO)
-        => Created("/users", await service.Create(userDTO));
+    public async Task<IActionResult> Add([FromBody] CreateUserDTO userDTO)
+        => Created("/users", await service.Add(userDTO));
     
     [HttpGet("{id:int}")]
-    public async Task<ActionResult> GetUser(int id)
-        => Ok(await service.GetUser(id));
+    public async Task<ActionResult> GetById(int id)
+        => Ok(await service.GetById(id));
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ResponseUserDTO>>> GetAllUser()
+    public async Task<ActionResult<IEnumerable<ResponseUserDTO>>> GetAll()
         => Ok(await service.GetAllUser());
 
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Remove(int id)
     {
-        await service.Delete(id);
+        await service.Remove(id);
         return NoContent();
     }
 
@@ -43,7 +43,7 @@ public class UserController(
     [HttpPatch("reset-password")]
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordUserDTO resetDTO)
     {
-        await service.ResetPassword(resetDTO.Email, resetDTO.Code, resetDTO.Password);
+        await service.ResetPassword(resetDTO);
         return Ok();
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Application.DTO;
-using StockManager.Application.Services;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Presentation.Controllers;
 
@@ -9,29 +9,29 @@ namespace StockManager.Presentation.Controllers;
 [Route("products/")]
 [Authorize]
 public class ProductController(
-    ProductService service
+    IProductService service
 ) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<ResponseProductDTO>> Create([FromBody] CreateProductDTO productDTO) 
-        => Created("products/", await service.Create(productDTO));
+    public async Task<ActionResult<ResponseProductDTO>> Add([FromBody] CreateProductDTO productDTO) 
+        => Created("products/", await service.Add(productDTO));
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ResponseProductDTO>> GetProduct(int id)
-        => Ok(await service.GetProduct(id));
+    public async Task<ActionResult<ResponseProductDTO>> GetById(int id)
+        => Ok(await service.GetById(id));
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ResponseProductDTO>>> GetAllProducts()
-        => Ok(await service.GetAllProducts());
+    public async Task<ActionResult<IEnumerable<ResponseProductDTO>>> GetAll()
+        => Ok(await service.GetAll());
     
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ResponseProductDTO>> Update(int id, [FromBody] UpdateProductDTO productDTO)
         => Ok(await service.Update(id, productDTO));
 
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Remove(int id)
     {
-        await service.Delete(id);
+        await service.Remove(id);
         return NoContent();
     }
 

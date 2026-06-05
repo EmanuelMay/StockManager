@@ -1,21 +1,22 @@
 using StockManager.Application.DTO;
-using StockManager.Domain.Interfaces;
+using StockManager.Domain.Exceptions;
+using StockManager.Domain.Interfaces.Repositories;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Application.Services;
 
 public class AuthService(
     IUserRepository repository,
-    TokenService service
-)
+    ITokenService service
+) : IAuthService
 {
     public async Task<string> Login(LoginDTO dto)
     {
-        var user = await repository.GetUserByEmail(dto.Email)
-            ?? throw new Exception();
+        var user = await repository.GetByEmail(dto.Email)
+            ?? throw new InvalidCredentialsException("invalid credentials");
         
-        var passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
-        if (!passwordValid)
-            throw new Exception();
+        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            throw new InvalidCredentialsException("invalid credentials");
         
         return service.Generate(user);
     }

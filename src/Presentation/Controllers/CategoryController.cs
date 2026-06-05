@@ -1,31 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Application.DTO;
-using StockManager.Application.Services;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Presentation.Controllers;
 
 [ApiController]
 [Route("/categories")]
 public class CategoryController(
-    CategoryService service
+    ICategoryService service
 ) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<ResponseCategoryDTO>> Create([FromBody] CreateCategoryDTO categoryDTO)
-        => Created("categories/", await service.Create(categoryDTO));
+    public async Task<ActionResult<ResponseCategoryDTO>> Add([FromBody] CreateCategoryDTO categoryDTO)
+        => Created("categories/", await service.Add(categoryDTO));
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ResponseCategoryDTO>> GetCategory(int id)
-        => Ok(await service.GetCategory(id));
+    public async Task<ActionResult<ResponseCategoryDTO>> GetById(int id)
+        => Ok(await service.GetById(id));
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ResponseCategoryDTO>>> GetAllCategories()
-        => Ok(await service.GetAllCategory());
+    public async Task<ActionResult<IEnumerable<ResponseCategoryDTO>>> GetAll()
+        => Ok(await service.GetAll());
     
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Remove(int id)
     {
-        await service.Delete(id);
+        await service.Remove(id);
         return NoContent();
     }
 

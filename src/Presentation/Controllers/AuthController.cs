@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Application.DTO;
-using StockManager.Application.Services;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Presentation.Controllers;
 
 [ApiController]
 [Route("auth/")]
 public class AuthController(
-    AuthService service
+    IAuthService service
 ) : ControllerBase
 {
     [HttpPost("login")]

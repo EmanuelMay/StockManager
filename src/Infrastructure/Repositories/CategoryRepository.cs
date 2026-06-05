@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StockManager.Domain.Entities;
-using StockManager.Domain.Interfaces;
+using StockManager.Domain.Interfaces.Repositories;
 using StockManager.Infrastructure.Context;
 
 namespace StockManager.Infrastructure.Repositories;
@@ -12,18 +12,18 @@ public class CategoryRepository(
     public async Task SaveChanges()
         => await context.SaveChangesAsync();
     
-    public async Task Create(Category category)
+    public async Task Add(Category category)
         => await context.Categories.AddAsync(category);
     
-    public async Task<Category?> GetCategory(int id)
+    public async Task<Category?> GetById(int id)
         => await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
-    public async Task<IEnumerable<Category>> GetAllCategories()
+    public async Task<IEnumerable<Category>> GetAll()
         => await context.Categories.AsNoTracking().ToListAsync();
     
-    public void Delete(Category category)
+    public void Remove(Category category)
         => context.Categories.Remove(category);
     
-    public async Task<bool> CategoryExists(string? name)
+    public async Task<bool> Exists(string? name)
         => await context.Categories.AnyAsync(c => c.Name == name);
 }

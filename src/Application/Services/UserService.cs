@@ -1,44 +1,46 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using StockManager.Application.DTO;
 using StockManager.Domain.Entities;
 using StockManager.Domain.Exceptions;
-using StockManager.Domain.Interfaces;
+using StockManager.Domain.Interfaces.Repositories;
+using StockManager.Domain.Interfaces.Services;
 
 namespace StockManager.Application.Services;
 
 public class UserService(
     IUserRepository repository,
     IEmailService emailService
-)
+) : IUserService
 {
-    public async Task<ResponseUserDTO> Create(CreateUserDTO userDTO)
+    public async Task<ResponseUserDTO> Add(CreateUserDTO userDTO)
     {
         if(await repository.EmailExists(userDTO.Email))
             throw new EmailAlreadyExistsException("email already exists");
 
         var user = new User(userDTO.Name, userDTO.Email, BCrypt.Net.BCrypt.HashPassword(userDTO.Password));
 
-        await repository.Create(user);
+        await repository.Add(user);
         await repository.SaveChanges();
 
         return ToDTO(user);
     }
 
-    public async Task<ResponseUserDTO> GetUser(int id) 
+    public async Task<ResponseUserDTO> GetById(int id) 
         => ToDTO(await GetUserOrThrow(id));
 
     public async Task<IEnumerable<ResponseUserDTO>> GetAllUser()
     {
-        var users = await repository.GetAllUsers();
+        var users = await repository.GetAll();
 
         return users.Select(u => ToDTO(u));
     }
 
-    public async Task Delete(int id)
+    public async Task Remove(int id)
     {
         var user = await GetUserOrThrow(id);
 
-        repository.Delete(user);
+        repository.Remove(user);
         await repository.SaveChanges();
     }
 
@@ -69,28 +71,36 @@ public class UserService(
         await repository.SaveChanges();
     }
 
-    public async Task ResetPassword(string email, string code, string password)
+    public async Task ResetPassword(ResetPasswordUserDTO resetDTO)
     {
-        var user = await GetUserByEmailOrThrow(email);
-        var resetPassword = await repository.GetResetPasswordCode(code, user.Id)
-            ?? throw new Exception("invalid code");
+        PasswordValidation(resetDTO.Password);
+
+        var user = await GetUserByEmailOrThrow(resetDTO.Email);
+        var resetPassword = await repository.GetResetPasswordCode(resetDTO.Code, user.Id)
+            ?? throw new InvalidCodeException("invalid code");
         
-        user.UpdatePassword(BCrypt.Net.BCrypt.HashPassword(password));
+        user.UpdatePassword(BCrypt.Net.BCrypt.HashPassword(resetDTO.Password));
         resetPassword.Used();
 
         await repository.SaveChanges();
     }
 
+    private void PasswordValidation(string password)
+    {
+        if (password.Length < 8)
+            throw new ValidationException("password must contain at least 8 characters");
+    }
+
     private async Task<User> GetUserByEmailOrThrow(string email)
     {
-        var user = await repository.GetUserByEmail(email)
-            ?? throw new UserNotFoundException("user not found");
+        var user = await repository.GetByEmail(email)
+            ?? throw new InvalidCredentialsException("invalid credentials");
         return user;
     }
 
     private async Task<User> GetUserOrThrow(int id)
     {
-        var user = await repository.GetUser(id)
+        var user = await repository.GetById(id)
             ?? throw new UserNotFoundException("user not found");
         return user;
     }

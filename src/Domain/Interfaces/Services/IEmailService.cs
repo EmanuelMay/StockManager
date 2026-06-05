@@ -1,4 +1,4 @@
-namespace StockManager.Domain.Interfaces;
+namespace StockManager.Domain.Interfaces.Services;
 
 public interface IEmailService
 {
